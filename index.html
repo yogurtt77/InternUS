@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Workiz</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f5f5f5;
+      }
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+      }
+
+      .card {
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .form-container {
+        background-color: white;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #333;
+        font-size: 18px;
+        margin-top: 0;
+        padding-bottom: 5px;
+        border-bottom: 1px solid #eee;
+      }
+      .form-section {
+        margin-bottom: 25px;
+      }
+      .form-row {
+        display: flex;
+        margin-bottom: 15px;
+        gap: 15px;
+      }
+      .form-group {
+        flex: 1;
+      }
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 14px;
+        color: #555;
+      }
+      input,
+      select,
+      textarea {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-sizing: border-box;
+        font-size: 14px;
+      }
+      .button-group {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 20px;
+      }
+      button {
+        padding: 8px 15px;
+        border: none;
+        border-radius: 20%;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: bold;
+      }
+      .primary-btn {
+        background-color: #f7d44c; /* жёлтый */
+        color: #000;
+        font-weight: bold;
+        border: none;
+        padding: 10px 24px;
+        border-radius: 9999px; /* полностью скруглённая */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+      }
+
+      .primary-btn:hover {
+        background-color: #e6c63f;
+        box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      .secondary-btn {
+        background-color: #c0c0c0; /* серый */
+        color: #000;
+        font-weight: bold;
+        border: none;
+        padding: 10px 24px;
+        border-radius: 9999px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+      }
+
+      .secondary-btn:hover {
+        background-color: #b0b0b0;
+        box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      .sent-btn {
+        background-color: #e74c3c !important; /* красный */
+        color: #fff !important;
+      }
+
+      .LogOut {
+        background-color: #e74c3c; /* жёлтый */
+        color: #fff;
+        font-weight: bold;
+        border: none;
+        padding: 10px 24px;
+        border-radius: 9999px; /* полностью скруглённая */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+      }
+
+      .LogOut:hover {
+        background-color: #cd411e;
+        box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+      }
+    </style>
+  </head>
+  <body>
+    <form id="jobForm">
+      <div class="form-container">
+        <div class="form-grid">
+          <!-- Client details -->
+          <div class="card">
+            <h1>Client details</h1>
+            <div class="form-section">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="firstName" class="required">First name</label>
+                  <input type="text" id="firstName" required />
+                </div>
+                <div class="form-group">
+                  <label for="lastName" class="required">Last name</label>
+                  <input type="text" id="lastName" required />
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="phone" class="required">Phone</label>
+                  <input type="tel" id="phone" required />
+                </div>
+                <div class="form-group">
+                  <label for="email">Email (optional)</label>
+                  <input type="email" id="email" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Job details -->
+          <div class="card">
+            <h1>Job details</h1>
+            <div class="form-section">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="jobType" class="required">Job type</label>
+                  <select id="jobType" required>
+                    <option value="">Select job type</option>
+                    <option value="repair">Repair</option>
+                    <option value="installation">Installation</option>
+                    <option value="maintenance">Maintenance</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="jobSource" class="required">Job source</label>
+                  <select id="jobSource" required>
+                    <option value="">Select job source</option>
+                    <option value="website">Website</option>
+                    <option value="phone">Phone</option>
+                    <option value="referral">Referral</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="jobDescription">Job description (optional)</label>
+                  <textarea id="jobDescription" rows="3"></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Service location -->
+          <div class="card">
+            <h1>Service location</h1>
+            <div class="form-section">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="address" class="required">Address</label>
+                  <input type="text" id="address" required />
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="city" class="required">City</label>
+                  <input type="text" id="city" required />
+                </div>
+                <div class="form-group">
+                  <label for="state" class="required">State</label>
+                  <input type="text" id="state" required />
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="zipCode" class="required">Zip code</label>
+                  <input type="text" id="zipCode" required />
+                </div>
+                <div class="form-group">
+                  <label for="area">Area</label>
+                  <input type="text" id="area" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Scheduled -->
+          <div class="card">
+            <h1>Scheduled</h1>
+            <div class="form-section">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="startDate" class="required">Start date</label>
+                  <input type="date" id="startDate" required />
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="startTime" class="required">Start time</label>
+                  <input type="time" id="startTime" required />
+                </div>
+                <div class="form-group">
+                  <label for="endTime" class="required">End time</label>
+                  <input type="time" id="endTime" required />
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="testSelect">Test select</label>
+                  <select id="testSelect">
+                    <option value="">Select an option</option>
+                    <option value="option1">Option 1</option>
+                    <option value="option2">Option 2</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="button-group">
+          <button id="createJobBtn" class="primary-btn" type="submit">
+            Create job
+          </button>
+          <button id="saveBtn" class="secondary-btn" type="button">
+            Save info
+          </button>
+          <button id="logoutBtn" class="LogOut" type="button">Log Out</button>
+        </div>
+      </div>
+      <div
+        id="job-success-message"
+        style="display: none; text-align: center; margin-top: 20px"
+      >
+        <h2 style="color: green">Job is created!</h2>
+        <a
+          id="view-detail-link"
+          href="#"
+          style="color: #3498db; text-decoration: underline"
+          >View Detail</a
+        >
+      </div>
+
+      <script src="app.js"></script>
+    </form>
+  </body>
+</html>
