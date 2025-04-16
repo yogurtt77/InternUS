@@ -35,7 +35,7 @@ _Интеграция формы Workiz с Pipedrive CRM_
 git clone https://github.com/yourusername/workiz-pipedrive.git
 ```
 
-2. Откройте auth.html в браузере или перейдите по ссылке. https://example.com
+2. Откройте auth.html в браузере или перейдите по ссылке. https://workizz.netlify.app/auth.html
 
 ## 🔑 Авторизация
 
@@ -54,7 +54,7 @@ git clone https://github.com/yourusername/workiz-pipedrive.git
 ## 🌐 Деплой
 
 Приложение успешно размещено и доступно по следующей ссылке:  
-🔗 [Открыть приложение](https://example.com)
+🔗 [Открыть приложение](https://workizz.netlify.app/auth.html)
 
 ## 📜 Лицензия
 
