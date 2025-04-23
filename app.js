@@ -1,18 +1,10 @@
-document.getElementById("logoutBtn").addEventListener("click", function () {
-  localStorage.removeItem("pipedrive_api_token");
-  localStorage.removeItem("pipedrive_domain");
-  window.location.href = "auth.html";
-});
+// Remove logout button event listener and replace with token and domain config
+// Get token and domain from window variables set in index.html
+const PIPEDRIVE_API_TOKEN = window.PIPEDRIVE_API_TOKEN;
+const PIPEDRIVE_DOMAIN = window.PIPEDRIVE_DOMAIN;
 
-const PIPEDRIVE_API_TOKEN = localStorage.getItem("pipedrive_api_token");
-const PIPEDRIVE_DOMAIN = localStorage.getItem("pipedrive_domain");
-
-// Проверяем авторизацию при загрузке
+// Removed the auth check, just load saved form data if available
 document.addEventListener("DOMContentLoaded", function () {
-  if (!PIPEDRIVE_API_TOKEN || !PIPEDRIVE_DOMAIN) {
-    window.location.href = "auth.html";
-    return;
-  }
   const savedData = localStorage.getItem("savedFormData");
   if (savedData) {
     const formData = JSON.parse(savedData);
@@ -168,18 +160,18 @@ function validateForm(formData) {
 // Создание сделки в Pipedrive
 async function createDealInPipedrive(formData) {
   const FIELD_KEYS = {
-    address: "e6bbf899ccbe6872cec83f3c7cb0f23c0d98273c",
-    zip_code: "1ff4696467f6a1ddf972ad3c9e1e67b2c113e4f3",
-    state: "bba723df7304e9c1ac612edc233aff42de063288",
-    area: "e53c3604a74cc72a2ba88573a8c9cf62cc0b0b52",
-    city: "0f638dda05d1df21ff801c095ea28efe9b5fa291",
-    job_type: "4804591d9c41dbc38047bbc51dfaf2872cd8bd9b",
-    job_source: "f075d56c57e4a56efd7e957c91bf332d2ce93ae0",
-    job_description: "ffb3bf4cd25692b1ed77cd17f552f50b79d85ac8",
-    start_time: "d578ada4791971a68e83fb8dcbfa31a472dbf329",
-    end_time: "bb588da69cc3efbcbd273973b0f4844b47bdd0f7",
-    test_select: "8f6c683e6c21971d87f423a54b70a5fec1b501c0",
-    start_date: "46b53a486f2ac3f8f9bb80dccd4d6f1c42057d3e",
+    address: "decfa0efbb5427ddf48b33d820acafac4c2ef524",
+    zip_code: "7c042d1e91f67b0459344fcac54132aadbb05ee1",
+    state: "f56c6f24155457018747e688de459cee7e2200dc",
+    area: "23fa3eb4cafceee466cc6b98ff628ab61fc42a47",
+    city: "b5bf86512779a505fa0cef05bdb6a5022f72122d",
+    job_type: "ac5596f02cec0d0fa2b12f0c36bd948a7eb603ff",
+    job_source: "541fa21f9e64ccabf7e9a35a1522da1d8b278ea3",
+    job_description: "ab1dfe989bc32cdfe69b922a126fae4d9a6060cc",
+    start_time: "a6988f2e7c89083939bed32348d14f1cf368a3ba",
+    end_time: "4810b0ac4ccf006a123debe8b173b259899a41ff",
+    test_select: "52c033065a9009cb1135058177cafb1d65f099a9",
+    start_date: "d5dcd7449d67827fc44516abfa009699ad200465",
   };
 
   const dealData = {
