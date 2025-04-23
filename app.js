@@ -3,6 +3,29 @@
 const PIPEDRIVE_API_TOKEN = window.PIPEDRIVE_API_TOKEN;
 const PIPEDRIVE_DOMAIN = window.PIPEDRIVE_DOMAIN;
 
+// Get SDK instance if available
+const sdk = window.pipedriveSDK;
+
+// Set up SDK event listeners if SDK is available
+if (sdk) {
+  // Listen for visibility changes
+  sdk.listen(Event.VISIBILITY, ({ error, data }) => {
+    if (error) {
+      console.error('Visibility event error:', error);
+      return;
+    }
+    
+    console.log('Visibility changed:', data.is_visible);
+    // You could update UI based on visibility state
+  });
+  
+  // Listen for page visibility state changes
+  sdk.listen(Event.PAGE_VISIBILITY_STATE, ({ data }) => {
+    console.log('Page visibility state:', data.state);
+    // You could pause/resume operations based on page visibility
+  });
+}
+
 // Removed the auth check, just load saved form data if available
 document.addEventListener("DOMContentLoaded", function () {
   const savedData = localStorage.getItem("savedFormData");
@@ -66,7 +89,15 @@ document.getElementById("saveBtn").addEventListener("click", function () {
   };
 
   localStorage.setItem("savedFormData", JSON.stringify(formData));
-  alert("Информация сохранена в Local Storage!");
+  
+  // Show snackbar notification using Pipedrive SDK if available
+  if (sdk) {
+    sdk.execute(Command.SHOW_SNACKBAR, {
+      message: 'Information saved successfully',
+    });
+  } else {
+    alert("Информация сохранена в Local Storage!");
+  }
 });
 
 // Обработчик отправки формы
@@ -104,10 +135,34 @@ document
     };
 
     try {
+      // Show confirmation dialog using SDK if available
+      let shouldProceed = true;
+      if (sdk) {
+        const { confirmed } = await sdk.execute(Command.SHOW_CONFIRMATION, {
+          title: 'Create Job',
+          description: 'Are you sure you want to create this job?',
+          okText: 'Create',
+          cancelText: 'Cancel'
+        });
+        shouldProceed = confirmed;
+      }
+
+      if (!shouldProceed) return;
+
       const response = await createDealInPipedrive(formData);
 
       if (response.success) {
-        alert("Заказ успешно создан в Pipedrive! ID: " + response.data.id);
+        if (sdk) {
+          sdk.execute(Command.SHOW_SNACKBAR, {
+            message: "Заказ успешно создан в Pipedrive!",
+            link: {
+              url: `https://${PIPEDRIVE_DOMAIN}.pipedrive.com/deal/${response.data.id}`,
+              label: "View Deal"
+            }
+          });
+        } else {
+          alert("Заказ успешно создан в Pipedrive! ID: " + response.data.id);
+        }
 
         createJobBtn.textContent = "Request sent";
         createJobBtn.classList.add("sent-btn");
@@ -119,18 +174,31 @@ document
 
         const detailLink = document.getElementById("view-detail-link");
         detailLink.href = `https://${PIPEDRIVE_DOMAIN}.pipedrive.com/deal/${response.data.id}`;
+        detailLink.setAttribute("data-deal-id", response.data.id);
 
         // Очищаем сохраненные данные после успешной отправки
         localStorage.removeItem("savedFormData");
       } else {
-        alert(
-          "Ошибка при создании заказа: " +
-            (response.error || "Неизвестная ошибка")
-        );
+        if (sdk) {
+          sdk.execute(Command.SHOW_SNACKBAR, {
+            message: "Ошибка при создании заказа: " + (response.error || "Неизвестная ошибка")
+          });
+        } else {
+          alert(
+            "Ошибка при создании заказа: " +
+              (response.error || "Неизвестная ошибка")
+          );
+        }
       }
     } catch (error) {
       console.error("Ошибка:", error);
-      alert("Произошла ошибка: " + error.message);
+      if (sdk) {
+        sdk.execute(Command.SHOW_SNACKBAR, {
+          message: "Произошла ошибка: " + error.message
+        });
+      } else {
+        alert("Произошла ошибка: " + error.message);
+      }
     }
   });
 
@@ -238,3 +306,31 @@ async function createPersonInPipedrive(clientData) {
     return null;
   }
 }
+
+// Function to open deal in Pipedrive using SDK
+async function openDealInPipedrive(dealId) {
+  if (!sdk) return;
+  
+  try {
+    await sdk.execute(Command.REDIRECT_TO, { 
+      view: View.DEALS, 
+      id: dealId 
+    });
+  } catch (error) {
+    console.error('Failed to open deal:', error);
+  }
+}
+
+// Add a click handler to the view detail link to use SDK redirect
+document.addEventListener("DOMContentLoaded", function() {
+  const viewDetailLink = document.getElementById("view-detail-link");
+  if (viewDetailLink && sdk) {
+    viewDetailLink.addEventListener("click", function(e) {
+      const dealId = this.getAttribute("data-deal-id");
+      if (dealId) {
+        e.preventDefault();
+        openDealInPipedrive(dealId);
+      }
+    });
+  }
+});

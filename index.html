@@ -4,6 +4,58 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Workiz</title>
+    <!-- Add Pipedrive App Extensions SDK from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@pipedrive/app-extensions-sdk@0/dist/index.umd.js"></script>
+    <!-- Add SDK constants definitions -->
+    <script>
+      // Define SDK constants
+      const Command = {
+        SHOW_SNACKBAR: 'showSnackbar',
+        SHOW_CONFIRMATION: 'showConfirmation',
+        RESIZE: 'resize',
+        GET_SIGNED_TOKEN: 'getSignedToken',
+        OPEN_MODAL: 'openModal',
+        CLOSE_MODAL: 'closeModal',
+        REDIRECT_TO: 'redirectTo',
+        SHOW_FLOATING_WINDOW: 'showFloatingWindow',
+        HIDE_FLOATING_WINDOW: 'hideFloatingWindow',
+        SET_NOTIFICATION: 'setNotification',
+        SET_FOCUS_MODE: 'setFocusMode',
+        GET_METADATA: 'getMetadata'
+      };
+
+      const Event = {
+        VISIBILITY: 'visibility',
+        CLOSE_CUSTOM_MODAL: 'closeCustomModal',
+        USER_SETTINGS_CHANGE: 'userSettingsChange',
+        PAGE_VISIBILITY_STATE: 'pageVisibilityState'
+      };
+
+      const Modal = {
+        JSON_MODAL: 'jsonModal',
+        CUSTOM_MODAL: 'customModal',
+        DEAL: 'deal',
+        PERSON: 'person',
+        ORGANIZATION: 'organization',
+        ACTIVITY: 'activity'
+      };
+
+      const View = {
+        DEALS: 'deals',
+        LEADS: 'leads',
+        ORGANIZATIONS: 'organizations',
+        CONTACTS: 'contacts',
+        CAMPAIGNS: 'campaigns',
+        PROJECTS: 'projects',
+        SETTINGS: 'settings'
+      };
+
+      const Color = {
+        PRIMARY: 'primary',
+        SECONDARY: 'secondary',
+        NEGATIVE: 'negative'
+      };
+    </script>
     <style>
       body {
         font-family: Arial, sans-serif;
@@ -11,6 +63,35 @@
         margin: 0 auto;
         padding: 20px;
         background-color: #f5f5f5;
+      }
+
+      /* Dark theme styles */
+      [data-theme="dark"] body {
+        background-color: #2c2c2c;
+        color: #f0f0f0;
+      }
+
+      [data-theme="dark"] .card,
+      [data-theme="dark"] .form-container {
+        background-color: #3c3c3c;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+      }
+
+      [data-theme="dark"] h1 {
+        color: #f0f0f0;
+        border-bottom: 1px solid #555;
+      }
+
+      [data-theme="dark"] input,
+      [data-theme="dark"] select,
+      [data-theme="dark"] textarea {
+        background-color: #4a4a4a;
+        border: 1px solid #666;
+        color: #f0f0f0;
+      }
+
+      [data-theme="dark"] label {
+        color: #ccc;
       }
 
       .form-grid {
@@ -144,6 +225,31 @@
     </script>
   </head>
   <body>
+    <!-- Initialize Pipedrive SDK -->
+    <script>
+      (async function() {
+        try {
+          // Initialize the SDK
+          const sdk = await new AppExtensionsSDK().initialize();
+          
+          // Store the SDK instance globally so we can access it elsewhere
+          window.pipedriveSDK = sdk;
+          
+          // Set theme attribute based on user settings
+          document.documentElement.setAttribute('data-theme', sdk.userSettings.theme);
+          
+          // Listen for theme changes
+          sdk.listen(Event.USER_SETTINGS_CHANGE, ({ data }) => {
+            document.documentElement.setAttribute('data-theme', data.theme);
+          });
+          
+          console.log('Pipedrive SDK initialized successfully');
+        } catch (error) {
+          console.error('Failed to initialize Pipedrive SDK:', error);
+        }
+      })();
+    </script>
+
     <form id="jobForm">
       <div class="form-container">
         <div class="form-grid">
